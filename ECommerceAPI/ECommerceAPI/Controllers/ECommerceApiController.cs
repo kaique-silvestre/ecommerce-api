@@ -23,6 +23,17 @@ namespace ECommerceAPI.Controllers
             return Ok(products);
         }
 
+        [HttpGet("{id}")]
+        public ActionResult Get(int id)
+        {
+            var product = _context.Products.Find(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return Ok(product);
+        }
+
         [HttpPost]
         public ActionResult<Product> Post(Product product)
         {

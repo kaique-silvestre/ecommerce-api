@@ -3,22 +3,27 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-// 1. Pegar a String de Conexão que você criou no appsettings.json
+// Configuração do Banco
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-// 2. Registrar o serviço do DbContext no "Container de Dependências"
 builder.Services.AddDbContext<ECommerceApiDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+// ADICIONE ISTO AQUI: Configuração de CORS para permitir que o front-end acesse a API
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PermitirTudo", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -26,8 +31,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// ADICIONE ISTO AQUI: Ativa o CORS no pipeline
+app.UseCors("PermitirTudo");
+
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

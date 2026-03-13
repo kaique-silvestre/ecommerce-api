@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Produto - E-Commerce API</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/shared.css">
+    <style>
+        /* ===== CADASTRO SPECIFIC STYLES ===== */
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            margin-top: 2rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-card {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem;
+            background: var(--surface);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--gray-200);
+        }
+
+        [data-theme="dark"] .form-card { border-color: var(--gray-800); }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 1rem;
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--gray-200);
+            background: var(--surface);
+            color: var(--text-main);
+            font-family: inherit;
+            resize: vertical;
+            min-height: 120px;
+            transition: var(--transition-fast);
+        }
+
+        [data-theme="dark"] .form-textarea { border-color: var(--gray-700); }
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        [data-theme="dark"] .form-actions { border-top-color: var(--gray-800); }
+
+        /* Custom Input focus animations */
+        .form-input:focus + .input-icon,
+        .form-textarea:focus + .input-icon {
+            color: var(--primary-500);
+        }
+
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .form-card { padding: 1.5rem; }
+            .form-actions { flex-direction: column; }
+            .form-actions .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-content">
+            <a href="cadastro.html" class="brand">
+                <i class="fas fa-plus-square"></i> Hub Produtos
+            </a>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Loja</a>
+                <a href="cadastro.html" class="nav-link active">Cadastrar</a>
+                <a href="admin.html" class="nav-link">Painel</a>
+                <button class="theme-toggle" aria-label="Alternar Tema">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1 class="page-title">Adicionar ao Catálogo</h1>
+            <p class="page-subtitle">Preencha as informações detalhadas para disponibilizar um novo item na sua loja virtual.</p>
+        </div>
+
+        <div class="form-card">
+            <form id="form-cadastro">
+                <div class="form-grid">
+                    
+                    <div class="form-group full-width">
+                        <label class="form-label">Nome do Produto *</label>
+                        <input type="text" id="nome" class="form-input" required placeholder="Ex: Fone Bluetooth Noise Cancelling">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Preço (R$) *</label>
+                        <input type="number" step="0.01" min="0" id="preco" class="form-input" required placeholder="299.90">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Quantidade Inicial *</label>
+                        <input type="number" min="0" id="estoque" class="form-input" required placeholder="50">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label class="form-label">URL da Imagem de Capa</label>
+                        <input type="url" id="imagem" class="form-input" placeholder="https://exemplo.com/imagem-produto.jpg">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label class="form-label">Descrição Rica</label>
+                        <textarea id="descricao" class="form-textarea" placeholder="Destaque as características principais deste produto para seus clientes..."></textarea>
+                    </div>
+
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" onclick="document.getElementById('form-cadastro').reset()">
+                        <i class="fas fa-eraser"></i> Limpar
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="btn-submit">
+                        <i class="fas fa-cloud-upload-alt"></i> Publicar Produto
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Utils and Logic -->
+    <script src="assets/js/utils.js"></script>
+    <script>
+        document.getElementById('form-cadastro').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = document.getElementById('btn-submit');
+            const originalText = btn.innerHTML;
+            
+            // Loading state
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+            btn.disabled = true;
+
+            const novoProduto = {
+                name: document.getElementById('nome').value,
+                price: parseFloat(document.getElementById('preco').value),
+                stock: parseInt(document.getElementById('estoque').value),
+                description: document.getElementById('descricao').value,
+                imageUrl: document.getElementById('imagem').value
+            };
+
+            try {
+                await ProductService.create(novoProduto);
+                Toast.show('Uhuu! Produto publicado com sucesso!');
+                document.getElementById('form-cadastro').reset();
+                
+                // Redireciona para o admin após 2 segundos
+                setTimeout(() => {
+                    window.location.href = 'admin.html';
+                }, 2000);
+
+            } catch (err) {
+                Toast.show('Erro ao criar o produto. Tente novamente.', 'error');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
