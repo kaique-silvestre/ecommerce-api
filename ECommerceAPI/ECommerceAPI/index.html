@@ -3,137 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Commerce - Sua Loja Premium</title>
+    <title>Igloo - Sua Loja Premium</title>
     <!-- FontAwesome Core -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Design System (Shared) -->
     <link rel="stylesheet" href="assets/css/shared.css">
     
     <style>
-        /* ===== INDEX SPECIFIC STYLES ===== */
+        /* ===== INDEX SPECIFIC STYLES - OPTIMIZED ===== */
         
-        /* Hero Section */
-        .hero {
-            position: relative;
-            padding: 6rem 2rem;
-            text-align: center;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 50vh;
-        }
-
-        /* Abstract Background Decoration for Hero */
-        .hero::before, .hero::after {
-            content: '';
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: -1;
-            opacity: 0.5;
-            animation: pulseBg 10s ease-in-out infinite alternate;
-        }
-
-        .hero::before {
-            top: -10%; left: -10%;
-            width: 400px; height: 400px;
-            background: var(--primary-300);
-        }
-
-        .hero::after {
-            bottom: -20%; right: -5%;
-            width: 500px; height: 500px;
-            background: var(--primary-200);
-            animation-delay: -5s;
-        }
-        
-        [data-theme="dark"] .hero::before { background: rgba(99, 102, 241, 0.4); }
-        [data-theme="dark"] .hero::after { background: rgba(139, 92, 246, 0.3); }
-
-        @keyframes pulseBg {
-            0% { transform: scale(1) translate(0, 0); }
-            100% { transform: scale(1.2) translate(50px, -50px); }
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: var(--primary-50);
-            color: var(--primary-600);
-            border-radius: var(--radius-full);
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--primary-200);
-        }
-
-        [data-theme="dark"] .hero-badge {
-            background: rgba(99, 102, 241, 0.1);
-            color: var(--primary-300);
-            border-color: rgba(99, 102, 241, 0.3);
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            margin-bottom: 1rem;
-            color: var(--text-main);
-            line-height: 1.1;
-        }
-
-        .hero h1 span {
-            background: linear-gradient(135deg, var(--primary-500), #8B5CF6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            font-size: clamp(1rem, 2vw, 1.25rem);
-            color: var(--text-muted);
-            max-width: 600px;
-            margin: 0 auto 2rem auto;
-        }
-
-        /* Product Grid */
+        /* Product Grid - Simplified */
         .section-title {
             font-size: 2rem;
             font-weight: 700;
             margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
+            text-align: center;
+            background: var(--gradient-primary);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
-            padding-bottom: 4rem;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            padding-bottom: 2rem;
         }
 
-        /* Product Card */
+        /* Product Card - Simplified */
         .product-card {
             display: flex;
             flex-direction: column;
             height: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
         }
 
         .product-image-container {
             position: relative;
-            padding-top: 100%; /* 1:1 Aspect Ratio */
+            padding-top: 100%;
             overflow: hidden;
             background: var(--gray-100);
-            border-bottom: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
         }
 
         [data-theme="dark"] .product-image-container {
             background: var(--gray-800);
-            border-bottom-color: var(--gray-800);
         }
 
         .product-image {
@@ -141,35 +60,37 @@
             top: 0; left: 0;
             width: 100%; height: 100%;
             object-fit: cover;
-            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: transform 0.3s ease;
         }
 
         .product-card:hover .product-image {
-            transform: scale(1.08); /* Zoom on hover */
+            transform: scale(1.05);
         }
 
         .product-badge {
             position: absolute;
             top: 1rem; right: 1rem;
-            background: var(--surface);
+            background: rgba(255, 255, 255, 0.95);
             color: var(--text-main);
-            padding: 0.25rem 0.75rem;
+            padding: 0.5rem 1rem;
             border-radius: var(--radius-full);
             font-size: 0.75rem;
             font-weight: 700;
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-md);
             z-index: 2;
         }
 
         .product-content {
-            padding: 1.5rem;
+            padding: 0.75rem;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
+            background: var(--surface);
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
         }
 
         .product-title {
-            font-size: 1.25rem;
+            font-size: 0.95rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
             color: var(--text-main);
@@ -180,14 +101,15 @@
         }
 
         .product-desc {
-            font-size: 0.875rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
-            margin-bottom: 1.5rem;
+            margin-bottom: 0.75rem;
             flex-grow: 1;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            line-height: 1.3;
         }
 
         .product-footer {
@@ -195,41 +117,78 @@
             justify-content: space-between;
             align-items: center;
             margin-top: auto;
+            gap: 1rem;
         }
 
         .product-price {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--primary-600);
+            font-size: 1.1rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        [data-theme="dark"] .product-price {
-            color: var(--primary-400);
+        .product-footer .btn-primary {
+            flex-shrink: 0;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.75rem;
         }
 
-        /* Empty State */
+        /* Empty State - Simplified */
         .empty-state {
             text-align: center;
-            padding: 4rem 2rem;
+            padding: 3rem 2rem;
             background: var(--surface);
-            border-radius: var(--radius-xl);
-            border: 1px dashed var(--gray-300);
+            border-radius: var(--radius-lg);
+            border: 2px dashed var(--gray-300);
             grid-column: 1 / -1;
         }
 
         [data-theme="dark"] .empty-state {
             border-color: var(--gray-700);
+            background: var(--surface);
         }
         
         .empty-state i {
             font-size: 3rem;
-            color: var(--gray-400);
-            margin-bottom: 1rem;
+            color: var(--primary-500);
+            margin-bottom: 1.5rem;
         }
 
         .empty-state h3 {
             font-size: 1.5rem;
-            margin-bottom: 0.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        .empty-state p {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Responsive - Simplified */
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 0.75rem;
+            }
+            
+            .section-title {
+                font-size: 1.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 0.75rem;
+            }
         }
 
     </style>
@@ -240,11 +199,11 @@
     <header class="header">
         <div class="header-content">
             <a href="index.html" class="brand">
-                <i class="fas fa-shopping-bag"></i> Premium
+                <i class="fas fa-igloo"></i> Igloo
             </a>
             
             <nav class="nav">
-                <a href="index.html" class="nav-link active">Vitrine</a>
+                <a href="index.html" class="nav-link active">Início</a>
                 <a href="cadastro.html" class="nav-link">Cadastrar</a>
                 <a href="admin.html" class="nav-link">Painel</a>
                 <button class="theme-toggle" aria-label="Alternar Tema">
@@ -255,18 +214,6 @@
     </header>
 
     <main>
-        <!-- Hero Banner Especial -->
-        <section class="hero">
-            <div class="hero-badge">
-                <i class="fas fa-star"></i> Nova Coleção Disponível
-            </div>
-            <h1>Descubra o <span>Incrível</span><br>para o seu Dia a Dia.</h1>
-            <p>Os melhores produtos, selecionados a dedo para proporcionar a melhor experiência que você já viu em uma loja online.</p>
-            <a href="#catalogo" class="btn btn-primary">
-                Ver Catálogo <i class="fas fa-arrow-right"></i>
-            </a>
-        </section>
-
         <!-- Product View Area -->
         <section id="catalogo" class="container">
             <h2 class="section-title">
@@ -285,7 +232,7 @@
 
     <!-- Footer -->
     <footer class="footer-global">
-        <p>&copy; 2024 E-Commerce Premium. Arquitetura Moderna e Alta Performance.</p>
+        <p>&copy; 2026 Igloo.</p>
     </footer>
 
     <!-- Utils and Logic -->

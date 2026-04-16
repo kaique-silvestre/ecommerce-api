@@ -1,8 +1,8 @@
-\# E-Commerce API
+\# Igloo E-Commerce
 
 
 
-API de E-Commerce desenvolvida em \*\*C# com \[ASP.NET](http://ASP.NET) Core\*\* como projeto da disciplina de Desenvolvimento de Software.
+API de E-Commerce **Igloo** desenvolvida em **C# com [ASP.NET](http://ASP.NET) Core** como projeto da disciplina de Desenvolvimento de Software.
 
 
 
@@ -42,13 +42,13 @@ Uma API RESTful completa para gerenciamento de um e-commerce, incluindo catálog
 
 \# Clone o repositório
 
-git clone https://github.com/seu-usuario/ecommerce-api.git
+git clone https://github.com/seu-usuario/igloo-ecommerce.git
 
 
 
 \# Entre na pasta do projeto
 
-cd ecommerce-api/ECommerceAPI
+cd igloo-ecommerce/ECommerceAPI
 
 
 
@@ -82,7 +82,7 @@ Acesse o Swagger em `https://localhost:{porta}/swagger` para testar os endpoints
 
 ```
 
-ECommerceAPI/
+Igloo/
 
 ├── Controllers/        → Endpoints da API
 
@@ -146,5 +146,5 @@ Utilize o \*\*Swagger\*\* para testar os endpoints diretamente no navegador ou o
 
 
 
-Projeto acadêmico — uso educacional.
+Projeto Igloo - uso educacional.
 
