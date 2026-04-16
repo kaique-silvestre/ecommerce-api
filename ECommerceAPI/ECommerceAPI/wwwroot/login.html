@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login — ECommerceAPI</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #f0f2f5; }
+    .card { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.12); width: 100%; max-width: 380px; }
+    h1 { font-size: 1.4rem; margin-bottom: 1.5rem; text-align: center; color: #333; }
+    label { display: block; font-size: .85rem; color: #555; margin-bottom: .25rem; }
+    input { width: 100%; padding: .6rem .75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; margin-bottom: 1rem; }
+    input:focus { outline: none; border-color: #4f46e5; }
+    button { width: 100%; padding: .7rem; background: #4f46e5; color: #fff; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
+    button:hover { background: #4338ca; }
+    #msg { margin-top: 1rem; text-align: center; color: #dc2626; font-size: .9rem; min-height: 1.2rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Login</h1>
+    <form id="form">
+      <label for="email">E-mail</label>
+      <input id="email" type="email" placeholder="voce@exemplo.com" required />
+
+      <label for="password">Senha</label>
+      <input id="password" type="password" placeholder="••••••••" required />
+
+      <button type="submit">Entrar</button>
+    </form>
+    <p id="msg"></p>
+  </div>
+
+  <script>
+    const API = "https://localhost:7005/api";
+
+    document.getElementById("form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById("msg");
+      msg.textContent = "";
+
+      const email    = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      let response;
+      try {
+        response = await fetch(`${API}/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+      } catch {
+        msg.textContent = "Não foi possível conectar à API.";
+        return;
+      }
+
+      if (!response.ok) {
+        msg.textContent = "Credenciais inválidas.";
+        return;
+      }
+
+      const data = await response.json();
+      localStorage.setItem("token", data.accessToken);
+      localStorage.setItem("role",  data.role);
+      localStorage.setItem("name",  data.name);
+
+      window.location.href = data.role === "Admin" ? "admin.html" : "index.html";
+    });
+  </script>
+</body>
+</html>

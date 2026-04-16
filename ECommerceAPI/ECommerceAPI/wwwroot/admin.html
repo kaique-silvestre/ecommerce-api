@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Painel Admin — ECommerceAPI</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; background: #f0f2f5; color: #333; }
+    header { background: #4f46e5; color: #fff; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+    header h1 { font-size: 1.3rem; }
+    .meta { display: flex; align-items: center; gap: 1rem; font-size: .9rem; }
+    button { cursor: pointer; border: none; border-radius: 4px; padding: .5rem 1rem; font-size: .9rem; }
+    #btn-logout  { background: #fff; color: #4f46e5; }
+    #btn-reload  { background: #4f46e5; color: #fff; border: 2px solid #fff; margin: 1.5rem 2rem .5rem; display: block; }
+    #btn-logout:hover { background: #e0e0ff; }
+    #btn-reload:hover { background: #4338ca; }
+    #list { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 1rem; padding: 0 2rem 2rem; }
+    .card { background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,.1); padding: 1rem; }
+    .card strong { font-size: 1rem; }
+    .card .price { color: #16a34a; font-weight: 600; margin: .4rem 0 .2rem; }
+    .card .stock { font-size: .85rem; color: #555; margin-bottom: .75rem; }
+    .card button { background: #dc2626; color: #fff; width: 100%; }
+    .card button:hover { background: #b91c1c; }
+    #empty { text-align: center; color: #888; margin-top: 3rem; font-size: 1rem; grid-column: 1/-1; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Painel Admin</h1>
+    <div class="meta">
+      <span id="greeting"></span>
+      <button id="btn-logout">Sair</button>
+    </div>
+  </header>
+
+  <button id="btn-reload">Recarregar lista</button>
+  <div id="list"></div>
+
+  <script>
+    const API   = "https://localhost:7005/api";
+    const token = localStorage.getItem("token");
+    const role  = localStorage.getItem("role");
+
+    if (!token || role !== "Admin") {
+      window.location.href = "login.html";
+    }
+
+    document.getElementById("greeting").textContent =
+      "Olá, " + (localStorage.getItem("name") || "Admin");
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+
+    document.getElementById("btn-logout").addEventListener("click", logout);
+    document.getElementById("btn-reload").addEventListener("click", load);
+
+    async function load() {
+      const listEl = document.getElementById("list");
+      listEl.innerHTML = "<p id='empty'>Carregando...</p>";
+
+      let response;
+      try {
+        response = await fetch(`${API}/products`);
+      } catch {
+        listEl.innerHTML = "<p id='empty'>Não foi possível conectar à API.</p>";
+        return;
+      }
+
+      if (!response.ok) {
+        listEl.innerHTML = `<p id='empty'>Erro ao carregar produtos (${response.status}).</p>`;
+        return;
+      }
+
+      const products = await response.json();
+
+      if (products.length === 0) {
+        listEl.innerHTML = "<p id='empty'>Nenhum produto cadastrado.</p>";
+        return;
+      }
+
+      listEl.innerHTML = products.map(p => `
+        <div class="card">
+          <strong>${escapeHtml(p.name ?? "")}</strong>
+          <div class="price">R$ ${Number(p.price).toFixed(2)}</div>
+          <div class="stock">Estoque: ${p.stock}</div>
+          <button onclick="del(${p.productId})">Excluir</button>
+        </div>
+      `).join("");
+    }
+
+    async function del(id) {
+      if (!confirm(`Excluir produto #${id}?`)) return;
+
+      let response;
+      try {
+        response = await fetch(`${API}/products/${id}`, {
+          method: "DELETE",
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+      } catch {
+        alert("Não foi possível conectar à API.");
+        return;
+      }
+
+      if (response.status === 204) { load(); return; }
+      if (response.status === 401) { alert("Sessão expirada."); logout(); return; }
+      if (response.status === 403) { alert("Sem permissão."); return; }
+      alert(`Falha: ${response.status}`);
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    }
+
+    load();
+  </script>
+</body>
+</html>
